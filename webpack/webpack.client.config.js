@@ -21,5 +21,8 @@ module.exports = {
 			}
 		]
 	},
-	target: 'node',
+	target: 'web',
 };
+
+
+// List has recently changed its name, now this library is called serve, to install it runs sudo npm i -g serves To start the server run serve built / statics --port 3001 - cache 0
