@@ -62,6 +62,10 @@
 
 	var _Page2 = _interopRequireDefault(_Page);
 
+	var _Layout = __webpack_require__(215);
+
+	var _Layout2 = _interopRequireDefault(_Layout);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function requestHandler(request, response) {
@@ -94,7 +98,10 @@
 			));
 		}
 
-		response.write(html);
+		response.write((0, _server.renderToStaticMarkup)(_react2.default.createElement(_Layout2.default, {
+			title: 'Aplicaci\xF3n',
+			content: html
+		})));
 		response.end();
 	}
 
@@ -24253,15 +24260,15 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Post = __webpack_require__(214);
+	var _Post = __webpack_require__(212);
 
 	var _Post2 = _interopRequireDefault(_Post);
 
-	var _Profile = __webpack_require__(215);
+	var _Profile = __webpack_require__(213);
 
 	var _Profile2 = _interopRequireDefault(_Profile);
 
-	var _Error = __webpack_require__(213);
+	var _Error = __webpack_require__(214);
 
 	var _Error2 = _interopRequireDefault(_Error);
 
@@ -24335,47 +24342,7 @@
 	exports.default = Home;
 
 /***/ },
-/* 212 */,
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(172);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	class Error404 extends _react.Component {
-	  render() {
-	    return _react2.default.createElement(
-	      'section',
-	      { name: 'error404' },
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Error 404'
-	      ),
-	      _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: '/' },
-	        'Go back to home'
-	      )
-	    );
-	  }
-	}
-
-	exports.default = Error404;
-
-/***/ },
-/* 214 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24419,7 +24386,7 @@
 	exports.default = Post;
 
 /***/ },
-/* 215 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24461,6 +24428,91 @@
 	}
 
 	exports.default = Profile;
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(172);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	class Error404 extends _react.Component {
+	  render() {
+	    return _react2.default.createElement(
+	      'section',
+	      { name: 'error404' },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Error 404'
+	      ),
+	      _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: '/' },
+	        'Go back to home'
+	      )
+	    );
+	  }
+	}
+
+	exports.default = Error404;
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function Layout(props) {
+	  return _react2.default.createElement(
+	    "html",
+	    null,
+	    _react2.default.createElement(
+	      "head",
+	      null,
+	      _react2.default.createElement("meta", { charSet: "utf-8" }),
+	      _react2.default.createElement(
+	        "title",
+	        null,
+	        props.title
+	      )
+	    ),
+	    _react2.default.createElement(
+	      "body",
+	      null,
+	      _react2.default.createElement("div", {
+	        id: "render-target",
+	        dangerouslySetInnetHTML: {
+	          __html: props.content
+	        }
+	      }),
+	      _react2.default.createElement("script", { src: "http://localhost:3001/app.js" })
+	    )
+	  );
+	}
+
+	exports.default = Layout;
 
 /***/ }
 /******/ ]);
