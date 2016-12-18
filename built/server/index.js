@@ -24401,6 +24401,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(172);
+
 	var _api = __webpack_require__(213);
 
 	var _api2 = _interopRequireDefault(_api);
@@ -24415,7 +24417,7 @@
 
 	    this.state = {
 	      loading: true,
-	      user: {},
+	      user: props.user || null,
 	      comments: []
 	    };
 	  }
@@ -24424,11 +24426,11 @@
 	    var _this = this;
 
 	    return _asyncToGenerator(function* () {
-	      const [user, comments] = yield Promise.all([_api2.default.users.getSingle(_this.props.userId), _api2.default.posts.getComments(_this.props.id)]);
+	      const [user, comments] = yield Promise.all([!_this.state.user ? _api2.default.users.getSingle(_this.props.userId) : Promise.resolve(null), _api2.default.posts.getComments(_this.props.id)]);
 
 	      _this.setState({
 	        loading: false,
-	        user,
+	        user: user || _this.state.user,
 	        comments
 	      });
 	    })();
@@ -24451,14 +24453,14 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'a',
-	          { href: `//${ this.state.user.website }`, target: '_black', rel: 'nofollow' },
+	          _reactRouter.Link,
+	          { to: `/user/${ this.state.user.id }` },
 	          this.state.user.name
 	        ),
 	        _react2.default.createElement(
 	          'span',
 	          null,
-	          'hay ',
+	          'Hay ',
 	          this.state.comments.length,
 	          ' comentarios'
 	        )
@@ -24524,6 +24526,13 @@
 	    getSingle(id = 1) {
 	      return _asyncToGenerator(function* () {
 	        const response = yield (0, _isomorphicFetch2.default)(`${ baseUrl }/users/${ id }`);
+	        const data = yield response.json();
+	        return data;
+	      })();
+	    },
+	    getPosts(id = 1) {
+	      return _asyncToGenerator(function* () {
+	        const response = yield (0, _isomorphicFetch2.default)(`${ baseUrl }/posts/?userId=${ id }`);
 	        const data = yield response.json();
 	        return data;
 	      })();
@@ -36720,39 +36729,201 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(172);
 
+	var _Post = __webpack_require__(212);
+
+	var _Post2 = _interopRequireDefault(_Post);
+
+	var _api = __webpack_require__(213);
+
+	var _api2 = _interopRequireDefault(_api);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 	class Profile extends _react.Component {
+	  constructor(props) {
+	    super(props);
+
+	    this.state = {
+	      user: {},
+	      posts: [],
+	      loading: true
+	    };
+	  }
+
+	  componentDidMount() {
+	    var _this = this;
+
+	    return _asyncToGenerator(function* () {
+	      const [user, posts] = yield Promise.all([_api2.default.users.getSingle(_this.props.params.id), _api2.default.users.getPosts(_this.props.params.id)]);
+
+	      _this.setState({
+	        user,
+	        posts,
+	        loading: false
+	      });
+	    })();
+	  }
+
 	  render() {
 	    return _react2.default.createElement(
 	      'section',
-	      { name: 'profile' },
+	      { name: 'Profile' },
 	      _react2.default.createElement(
-	        'h1',
+	        'h2',
 	        null,
-	        'Profile'
+	        'Profile of ',
+	        this.state.user.name
 	      ),
 	      _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: '/' },
-	        'Go to home'
+	        'fieldset',
+	        null,
+	        _react2.default.createElement(
+	          'legend',
+	          null,
+	          'Basic Info'
+	        ),
+	        _react2.default.createElement('input', { type: 'email', value: this.state.user.email, disabled: true })
+	      ),
+	      this.state.user.address && _react2.default.createElement(
+	        'fieldset',
+	        null,
+	        _react2.default.createElement(
+	          'legend',
+	          null,
+	          'Address'
+	        ),
+	        _react2.default.createElement(
+	          'address',
+	          null,
+	          this.state.user.address.street,
+	          _react2.default.createElement('br', null),
+	          this.state.user.address.suite,
+	          _react2.default.createElement('br', null),
+	          this.state.user.address.city,
+	          _react2.default.createElement('br', null),
+	          this.state.user.address.zipcode,
+	          _react2.default.createElement('br', null)
+	        )
 	      ),
 	      _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: '/ramdom' },
-	        'Go to ramdom'
+	        'section',
+	        null,
+	        this.state.posts.map(post => _react2.default.createElement(_Post2.default, _extends({
+	          key: post.id,
+	          user: this.state.user
+	        }, post)))
 	      )
 	    );
 	  }
 	}
 
 	exports.default = Profile;
+
+	// import React, { Component } from 'react';
+	// import { Link } from 'react-router';
+
+	// import Post from '../../posts/containers/Post.jsx';
+
+	// import api from '../../api.js';
+
+
+	// class Profile extends Component {
+	//   constructor(props){
+	//     super(props);
+
+	//     this.state = {
+	//       user:{},
+	//       posts: [],
+	//       loading: true,
+	//     };
+	//   }
+
+	//   async componentDidMount() {
+	//     const [
+	//       user,
+	//       posts,
+	//     ] = await Promise.all([
+	//       api.users.getSingle(this.props.params.id),
+	//       api.users.getPosts(this.props.params.id)
+	//     ]);
+
+	//     this.setState({
+	//       user,
+	//       posts,
+	//       loading: false,
+	//     });
+	//   }
+	//   render() {
+	//     return (
+	//       <section name="Profile">
+	//         <h2>profile of {this.state.user.name}</h2>
+
+	//         <fieldset>
+	//           <legend>Basic Info</legend>
+	//           <input type="email" value={this.state.user.email} disabled />
+	//         </fieldset>
+
+	//           {this.state.user.address && (
+	//             <fieldset>
+	//               <legend>Address</legend>
+	//               <address>
+	//                 {this.state.user.address.street}<br />
+	//                 {this.state.user.address.suite}<br />
+	//                 {this.state.user.address.city}<br />
+	//                 {this.state.user.address.zipcode}<br />
+	//               </address>
+	//             </fieldset>
+	//           )}
+
+	//           <section>
+	//             {this.state.posts
+	//               .map(post => (
+	//                 <Post
+	//                   key={post.id}
+	//                   user={this.state.user}
+	//                   {...post}
+	//                 />
+	//               ))
+	//             }
+	//           </section>
+
+	//       </section>
+	//     );
+	//   }
+	// }
+
+	// export default Profile;
+
+
+	//   render() {
+	//     return (
+	//       <section name="profile">
+	//         <h1>Profile</h1>
+	//         <Link to="/">
+	//           Go to home
+	//         </Link>
+	//         <Link to="/ramdom">
+	//           Go to ramdom
+	//         </Link>
+	//       </section>
+	//     );
+	//   }
+	// }
+
+	// export default Profile;
+
+
+	// state in min 2:03 https://platzi.com/clases/react/concepto/creacion-del-proyecto/perfil-de-usuarios7821/material/
 
 /***/ },
 /* 255 */
